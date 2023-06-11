@@ -5,52 +5,90 @@ import Image from "next/image";
 import React, { useContext } from "react";
 import WalletIcon from "@mui/icons-material/Wallet";
 import { WalletContext } from "../../contexts";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
+export const TopHeader = () => {
+  const { login } = useContext(WalletContext);
 
-export const TopHeader = ()=>{
-  const {login}=useContext(WalletContext)
-  return <TopHeaderView>
-    <Image src="/opensea_logo.svg" width={30} height={30}/>
-    <Title>OpenSea</Title>
+  const router = useRouter();
 
-    <SearchView>
-      <Autocomplete renderInput={(params) => (<TextField {...params} label={"Search items, collections, and accounts"}/>)} options={[]}/>
-    </SearchView>
+  //엔터키를 누를시 리스트 페이지로 이동
+  const onKeyDown = (e: any) => {
+    if (
+      //이더리움 주소일시 만 이동
+      e.code === "Enter" &&
+      /^(0x)?[\wa-zA-Z]{40}$/.test(e.target.value || "")
+    ) {
+      router.push(`/list/${e.target.value}`);
+    }
+  };
 
-    <MenuView>
-      <Menu>Explore</Menu>
-      <Menu>Creat</Menu>
-    </MenuView>
+  return (
+    <TopHeaderView>
+      <Link href={"/"}>
+        <Logo>
+          <Image src="/opensea_logo.svg" width={30} height={30} />
+          <Title>OpenSea</Title>
+        </Logo>
+      </Link>
 
-    <IconView onClick={login}>
-      <WalletIcon/>
-    </IconView>
+      <SearchView>
+        <Autocomplete
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={"Search items, collections, and accounts"}
+              onKeyDown={onKeyDown}
+            />
+          )}
+          options={[]}
+        />
+      </SearchView>
+
+      <MenuView>
+        <Menu>Explore</Menu>
+        <Link href="/create">
+          <Menu>Creat</Menu>
+        </Link>
+      </MenuView>
+
+      <IconView onClick={login}>
+        <WalletIcon />
+      </IconView>
     </TopHeaderView>
-}
-const TopHeaderView =styled.div`
-  padding:  16px 32px;
+  );
+};
+const Logo = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`
-const Title =styled.div`
+  cursor: pointer;
+`;
+const TopHeaderView = styled.div`
+  padding: 16px 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const Title = styled.div`
   font-size: 24px;
   font-weight: 700;
-  margin-left:  8px;
-`
-const SearchView =styled.div`
-  margin-left:  64px;
+  margin-left: 8px;
+`;
+const SearchView = styled.div`
+  margin-left: 64px;
   flex: 1;
-`
-const MenuView =styled.div`
+`;
+const MenuView = styled.div`
   display: flex;
-  margin-left:  64px;
-`
-const Menu =styled.div`
+  margin-left: 64px;
+`;
+const Menu = styled.div`
   padding: 0 16px;
   font-weight: 700;
-`
-const IconView =styled.div`
-  margin-left:  32px;
-
-`
+  cursor: pointer;
+`;
+const IconView = styled.div`
+  margin-left: 32px;
+`;

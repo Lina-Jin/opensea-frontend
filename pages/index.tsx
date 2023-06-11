@@ -1,12 +1,10 @@
-
-import { Banner, TopHeader } from '../components'
-
+import { Banner, TopHeader } from "../components";
 
 export default function Home() {
   return (
     <div>
-<TopHeader/>
-<Banner/>
+      <TopHeader />
+      <Banner />
     </div>
-  )
+  );
 }
